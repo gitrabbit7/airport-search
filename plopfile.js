@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-undef
-module.exports = (plop) => {
+module.exports = plop => {
   plop.setGenerator('entity', {
     description: 'Create an entity',
     prompts: [
@@ -7,10 +6,7 @@ module.exports = (plop) => {
         type: 'list',
         name: 'entityType',
         message: 'Choose entity type',
-        choices: [
-          'component',
-          'type'
-        ]
+        choices: ['component', 'type', 'interface', 'hook']
       },
       {
         type: 'input',
@@ -18,24 +14,66 @@ module.exports = (plop) => {
         message: 'Enter entity name'
       }
     ],
-    actions: (data) => {
+    actions: data => {
       if (data.entityType === 'component') {
         return [
           {
             type: 'add',
-            path: 'components/{{pascalCase name}}/{{pascalCase name}}.tsx',
+            path: './src/components/{{pascalCase name}}/{{pascalCase name}}.tsx',
             templateFile: 'plop-templates/Component/Component.tsx.hbs'
           },
           {
             type: 'add',
-            path: 'components/{{pascalCase name}}/index.ts',
+            path: './src/components/{{pascalCase name}}/index.ts',
             templateFile: 'plop-templates/Component/index.ts.hbs'
           },
           {
             type: 'append',
-            path: 'components/index.ts',
+            path: './src/components/index.ts',
             separator: '',
             templateFile: 'plop-templates/Component/exportAll.ts.hbs'
+          }
+        ]
+      } else if (data.entityType === 'hook') {
+        return [
+          {
+            type: 'add',
+            path: 'hooks/{{camelCase name}}.ts',
+            templateFile: 'plop-templates/Hook/Hook.ts.hbs'
+          },
+          {
+            type: 'append',
+            path: 'hooks/index.ts',
+            separator: '',
+            templateFile: 'plop-templates/Hook/exportAll.ts.hbs'
+          }
+        ]
+      } else if (data.entityType === 'type') {
+        return [
+          {
+            type: 'add',
+            path: 'types/T{{pascalCase name}}.ts',
+            templateFile: 'plop-templates/Type/Type.ts.hbs'
+          },
+          {
+            type: 'append',
+            path: 'types/index.ts',
+            separator: '',
+            templateFile: 'plop-templates/Type/exportAll.ts.hbs'
+          }
+        ]
+      } else if (data.entityType === 'interface') {
+        return [
+          {
+            type: 'add',
+            path: 'types/I{{pascalCase name}}.ts',
+            templateFile: 'plop-templates/Interface/Interface.ts.hbs'
+          },
+          {
+            type: 'append',
+            path: 'types/index.ts',
+            separator: '',
+            templateFile: 'plop-templates/Interface/exportAll.ts.hbs'
           }
         ]
       }
