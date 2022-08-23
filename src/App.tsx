@@ -100,7 +100,6 @@ function App() {
       toMarker?.position.lat &&
       toMarker?.position.lng
     ) {
-      console.log('here1')
       setDistance(
         calcNauticalMiles(
           newMarker.position.lat,
@@ -131,7 +130,6 @@ function App() {
       fromMarker?.position.lat &&
       fromMarker?.position.lng
     ) {
-      console.log('here2')
       setDistance(
         calcNauticalMiles(
           newMarker.position.lat,
