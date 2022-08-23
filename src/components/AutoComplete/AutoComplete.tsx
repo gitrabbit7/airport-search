@@ -16,10 +16,14 @@ export interface IAutoCompleteProps {
   /**
    * Autocomplete Label
    */
-  label: string
+  label: string,
+  /**
+   * Function Fired when the FROM AutoComplete changed
+   */
+  handleAutoCompleteChanged: (autoCompleteNameairport: IAirport) => void,
 }
 
-const CustomAutoComplete = styled(MuiAutocomplete)(() => ({
+const CustomAutoComplete = styled(MuiAutocomplete<IAirport>)(() => ({
   '& .MuiChip-root': {
     borderRadius: '4px',
     background: 'transparent'
@@ -27,8 +31,9 @@ const CustomAutoComplete = styled(MuiAutocomplete)(() => ({
 }))
 
 export const AutoComplete: FC<IAutoCompleteProps> = memo(
-  ({ label = '', ...props }: IAutoCompleteProps) => {
-    const { airports, handleInputChange } = useGetAirports()
+  ({ label = '', handleAutoCompleteChanged, ...props }: IAutoCompleteProps) => {
+    const { airports, singleAirport, handleInputChange, handleAutomCompleteChange } =
+      useGetAirports()
     const [availableAirports, setAvailableAirports] = useState<IAirport[]>([])
 
     useEffect(() => {
@@ -39,12 +44,17 @@ export const AutoComplete: FC<IAutoCompleteProps> = memo(
       setAvailableAirports(airports)
     }, [airports])
 
+    useEffect(() => {
+      handleAutoCompleteChanged(singleAirport)
+    }, [singleAirport])
+
     return (
       <CustomAutoComplete
         {...props}
         disablePortal
         options={availableAirports ?? []}
         sx={{ width: 300 }}
+        onChange={handleAutomCompleteChange}
         renderInput={params => (
           <TextField {...params} onChange={handleInputChange} label={label} />
         )}

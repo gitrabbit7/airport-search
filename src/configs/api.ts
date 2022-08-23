@@ -2,5 +2,6 @@
 import { REACT_APP_AIRPORT_CODE_API_URL } from '@/configs/env'
 
 export const API_URLS = {
-  AUTO_COMPLETE: `${REACT_APP_AIRPORT_CODE_API_URL}/autocomplete`
+  AUTO_COMPLETE: `${REACT_APP_AIRPORT_CODE_API_URL}/autocomplete`,
+  SINGLE: `${REACT_APP_AIRPORT_CODE_API_URL}/single`
 }

@@ -1,74 +1,98 @@
-import { GoogleMap, InfoWindow, MarkerF } from '@react-google-maps/api'
-import { FC, memo, useState } from 'react'
+import { GoogleMap, InfoWindow, Marker } from '@react-google-maps/api'
+import { FC, memo, useEffect, useState } from 'react'
 
-const markers = [
-  {
-    id: 1,
-    name: 'Chicago, Illinois',
-    position: { lat: 41.881832, lng: -87.623177 }
-  },
-  {
-    id: 2,
-    name: 'Denver, Colorado',
-    position: { lat: 39.739235, lng: -104.99025 }
-  },
-  {
-    id: 3,
-    name: 'Los Angeles, California',
-    position: { lat: 34.052235, lng: -118.243683 }
-  },
-  {
-    id: 4,
-    name: 'New York, New York',
-    position: { lat: 40.712776, lng: -74.005974 }
-  },
-  {
-    id: 5,
-    name: 'New York, New York',
-    position: { lat: -40.712776, lng: 74.005974 }
-  }
-]
+import { IMarker } from '@/types'
 
-// export interface IMapProps {}
+export interface IMapProps {
+  /**
+   * Information of FROM Marker
+   */
+  fromLocation: IMarker | undefined
+  /**
+   * Information of TO Marker
+   */
+  toLocation: IMarker | undefined
+}
 
-export const Map: FC = memo(() => {
-  const [activeMarker, setActiveMarker] = useState<number>()
+const defaultPosition = {
+  lat: 48.856389,
+  lng: 2.352222
+}
 
-  const handleActiveMarker = (id: number) => {
-    if (id === activeMarker) {
-      return
+export const Map: FC<IMapProps> = memo(
+  ({ fromLocation, toLocation }: IMapProps) => {
+    const [map, setMap] = useState<google.maps.Map>()
+    const [activeMarker, setActiveMarker] = useState<number>()
+
+    useEffect(() => {
+      const bounds = new google.maps.LatLngBounds()
+
+      if (fromLocation?.position.lat && fromLocation?.position.lng) {
+        bounds.extend(fromLocation?.position)
+        map?.fitBounds(bounds)
+      }
+        
+      if (toLocation?.position.lat && toLocation?.position.lng) {
+        bounds.extend(toLocation?.position)
+        map?.fitBounds(bounds)
+      }
+    }, [fromLocation, toLocation])
+
+    const handleActiveMarker = (id: number) => {
+      if (id !== activeMarker) {
+        setActiveMarker(id)
+      }      
     }
-    setActiveMarker(id)
-  }
 
-  const handleOnLoad = (map: google.maps.Map) => {
-    const bounds = new google.maps.LatLngBounds()
-    markers.forEach(({ position }) => bounds.extend(position))
-    map.fitBounds(bounds)
-  }
+    const handleOnLoad = (mapIns: google.maps.Map) => {
+      mapIns.setOptions({
+        maxZoom: 8
+      })
+      setMap(mapIns)
+    }
 
-  return (
-    <GoogleMap
-      onLoad={handleOnLoad}
-      onClick={() => setActiveMarker(-1)}
-      mapContainerStyle={{ width: '100vw', height: '100vh' }}
-    >
-      {markers.map(({ id, name, position }) => (
-        <MarkerF
-          key={id}
-          position={position}
-          onClick={() => handleActiveMarker(id)}
-        >
-          {activeMarker === id ? (
-            <InfoWindow onCloseClick={() => setActiveMarker(-1)}>
-              <div>{name}</div>
-            </InfoWindow>
-          ) : null}
-        </MarkerF>
-      ))}
-    </GoogleMap>
-  )
-})
+    return (
+      <GoogleMap
+        onLoad={handleOnLoad}
+        center={defaultPosition}
+        zoom={3}
+        onClick={() => setActiveMarker(-1)}
+        mapContainerStyle={{ width: '100vw', height: '100vh' }}
+      >
+        {fromLocation?.position.lat && fromLocation.position.lng && (
+          <Marker
+            position={fromLocation?.position}
+            icon={{
+              url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+            }}
+            onClick={() => handleActiveMarker(fromLocation?.id)}
+          >
+            {activeMarker === fromLocation?.id ? (
+              <InfoWindow onCloseClick={() => setActiveMarker(-1)}>
+                <div>{fromLocation.name}</div>
+              </InfoWindow>
+            ) : null}
+          </Marker>
+        )}
+        {toLocation?.position.lat && toLocation.position.lng && (
+          <Marker
+            position={toLocation?.position}
+            icon={{
+              url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+            }}
+            onClick={() => handleActiveMarker(toLocation?.id)}
+          >
+            {activeMarker === toLocation?.id && (
+              <InfoWindow onCloseClick={() => setActiveMarker(-1)}>
+                <div>{toLocation?.name}</div>
+              </InfoWindow>
+            )}
+          </Marker>
+        )}
+      </GoogleMap>
+    )
+  }
+)
 
 Map.displayName = 'Map'
 
