@@ -54,7 +54,7 @@ export const AutoComplete: FC<IAutoCompleteProps> = memo(
 
     return (
       <CustomAutoComplete
-        loading={term.length > 2 ? true : false}
+        loading={term.length > 2}
         {...props}
         disablePortal
         options={availableAirports ?? []}

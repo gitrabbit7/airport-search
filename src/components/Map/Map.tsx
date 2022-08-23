@@ -66,6 +66,7 @@ export const Map: FC<IMapProps> = memo(
               url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
             }}
             onClick={() => handleActiveMarker(fromLocation?.id)}
+            animation={google.maps.Animation.BOUNCE}
           >
             {activeMarker === fromLocation?.id ? (
               <InfoWindow onCloseClick={() => setActiveMarker(-1)}>
@@ -80,6 +81,7 @@ export const Map: FC<IMapProps> = memo(
             icon={{
               url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
             }}
+            animation={google.maps.Animation.BOUNCE}
             onClick={() => handleActiveMarker(toLocation?.id)}
           >
             {activeMarker === toLocation?.id && (

@@ -7,6 +7,8 @@ import { useCallback, useState } from 'react'
 import { IAirport } from '@/types'
 import { getAirports, getSingleAirPort } from '@/utils/airport'
 
+import { useToast } from './useToast'
+
 const InitialAirPortValue = {
   label: '',
   name: '',
@@ -31,12 +33,22 @@ export const useGetAirports = () => {
     useState<IAirport>(InitialAirPortValue)
   const [timer, setTimer] = useState<NodeJS.Timeout>()
 
+  const { showToast } = useToast()
+
   const fetchAirports = useCallback(
     async (keyword: string) => {
       const response = await getAirports(keyword)
-      setAirports(
-        response.status ? (response.data?.airports as IAirport[]) ?? [] : []
-      )
+
+      console.log(response.data)
+
+      if (response.data.status) {
+        setAirports((response.data?.airports as IAirport[]) ?? [])
+      } else {
+        showToast({
+          message: response.data.message
+        })
+        setAirports([])
+      }
     },
     [getAirports]
   )
@@ -57,7 +69,7 @@ export const useGetAirports = () => {
     e.preventDefault()
     const keyword = e.target.value
     setTerm(keyword)
-    if (keyword?.length) {
+    if (keyword?.length > 2) {
       clearTimeout(timer)
       const newTimer = setTimeout(() => {
         fetchAirports(keyword)
@@ -73,7 +85,10 @@ export const useGetAirports = () => {
     value: AutocompleteValue<IAirport, false, false, false>
   ) => {
     e.preventDefault()
-    if (!value) setAirports([])
+    if (!value) {
+      setTerm('')
+      setAirports([])
+    }
     const iata = value?.iata as string
     fetchSingleAirport(iata)
   }
