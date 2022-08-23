@@ -1,3 +1,5 @@
 export * from './ICountry'
 export * from './IState'
 export * from './IAirport'
+export * from './IMarker'
+export * from './IPosition'

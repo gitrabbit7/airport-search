@@ -38,12 +38,12 @@ module.exports = plop => {
         return [
           {
             type: 'add',
-            path: 'hooks/{{camelCase name}}.ts',
+            path: './src/hooks/{{camelCase name}}.ts',
             templateFile: 'plop-templates/Hook/Hook.ts.hbs'
           },
           {
             type: 'append',
-            path: 'hooks/index.ts',
+            path: './src/hooks/index.ts',
             separator: '',
             templateFile: 'plop-templates/Hook/exportAll.ts.hbs'
           }
@@ -52,12 +52,12 @@ module.exports = plop => {
         return [
           {
             type: 'add',
-            path: 'types/T{{pascalCase name}}.ts',
+            path: './src/types/T{{pascalCase name}}.ts',
             templateFile: 'plop-templates/Type/Type.ts.hbs'
           },
           {
             type: 'append',
-            path: 'types/index.ts',
+            path: './src/types/index.ts',
             separator: '',
             templateFile: 'plop-templates/Type/exportAll.ts.hbs'
           }
@@ -66,12 +66,12 @@ module.exports = plop => {
         return [
           {
             type: 'add',
-            path: 'types/I{{pascalCase name}}.ts',
+            path: './src/types/I{{pascalCase name}}.ts',
             templateFile: 'plop-templates/Interface/Interface.ts.hbs'
           },
           {
             type: 'append',
-            path: 'types/index.ts',
+            path: './src/types/index.ts',
             separator: '',
             templateFile: 'plop-templates/Interface/exportAll.ts.hbs'
           }

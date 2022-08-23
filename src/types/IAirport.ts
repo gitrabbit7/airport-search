@@ -7,4 +7,6 @@ export interface IAirport {
   iata: string
   country: ICountry
   state: IState
+  latitude: string,
+  longitude : string,
 }
