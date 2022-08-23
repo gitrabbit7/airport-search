@@ -21,8 +21,11 @@ const defaultPosition = {
 
 export const Map: FC<IMapProps> = memo(
   ({ fromLocation, toLocation }: IMapProps) => {
-    const [map, setMap] = useState<google.maps.Map>()
+    const [map, setMap] = useState<google.maps.Map | null>(null)
     const [activeMarker, setActiveMarker] = useState<number>()
+    const [flightPath, setFlightPath] = useState<google.maps.Polyline | null>(
+      null
+    )
 
     useEffect(() => {
       const bounds = new google.maps.LatLngBounds()
@@ -35,6 +38,24 @@ export const Map: FC<IMapProps> = memo(
       if (toLocation?.position.lat && toLocation?.position.lng) {
         bounds.extend(toLocation?.position)
         map?.fitBounds(bounds)
+      }
+
+      if (fromLocation?.position.lat && toLocation?.position.lat) {
+        const flightPathCoordinates = [
+          fromLocation.position,
+          toLocation.position
+        ]
+        const path = new google.maps.Polyline({
+          path: flightPathCoordinates,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        })
+
+        path?.setMap(map)
+        setFlightPath(path)
+      } else {
+        flightPath?.setMap(null)
       }
     }, [fromLocation, toLocation])
 

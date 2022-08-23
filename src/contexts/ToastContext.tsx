@@ -1,10 +1,8 @@
-
 import { SnackbarProps as IToastState } from '@mui/material'
-import Snackbar from '@mui/material/Snackbar'
 import type { PropsWithChildren } from 'react'
 import { createContext, Reducer, useReducer } from 'react'
 
-import { Alert } from '@/components'
+import { Toast } from '@/components'
 
 import {
   hideToast,
@@ -44,9 +42,7 @@ const createToastContext = (
     return (
       <Context.Provider value={{ state, actions: { ...boundActions } }}>
         {children}
-        <Snackbar open={state.open} autoHideDuration={2000}>
-          <Alert severity='warning'>{state.message}</Alert>
-        </Snackbar>
+        <Toast {...state} />
       </Context.Provider>
     )
   }

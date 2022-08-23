@@ -39,8 +39,6 @@ export const useGetAirports = () => {
     async (keyword: string) => {
       const response = await getAirports(keyword)
 
-      console.log(response.data)
-
       if (response.data.status) {
         setAirports((response.data?.airports as IAirport[]) ?? [])
       } else {
