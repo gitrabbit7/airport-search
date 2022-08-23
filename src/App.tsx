@@ -5,8 +5,8 @@ import React, { useState } from 'react'
 
 import { AutoComplete, Map } from '@/components'
 import { REACT_APP_GOOGLE_MAP_API_KEY } from '@/configs/env'
-
-import { IAirport, IMarker } from './types'
+import { IAirport, IMarker } from '@/types'
+import { calcNauticalMiles } from '@/utils/distance'
 
 const AppContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -56,12 +56,18 @@ const HelperTextContainer = styled(Box)(({ theme }) => ({
   }
 }))
 
+const SearchTerm = styled(Typography)(() => ({
+  fontSize: 14,
+  fontWeight: 600,
+  color: '#515759'
+}))
+
 const HelperText = styled(Typography)(() => ({
   color: '#147BD1',
   fontSize: 12
 }))
 
-const SearchTerm = styled(Typography)(() => ({
+const Distance = styled(Typography)(() => ({
   fontSize: 14,
   fontWeight: 600,
   color: '#515759'
@@ -75,6 +81,8 @@ function App() {
   const [fromMarker, setFromMarker] = useState<IMarker>()
   const [toMarker, setToMarker] = useState<IMarker>()
 
+  const [distance, setDistance] = useState(0)
+
   const onFromAutoCompleteChanged = (airport: IAirport) => {
     const newMarker: IMarker = {
       id: 1,
@@ -85,6 +93,25 @@ function App() {
       }
     }
     setFromMarker(newMarker)
+
+    if (
+      newMarker?.position.lat &&
+      newMarker?.position.lng &&
+      toMarker?.position.lat &&
+      toMarker?.position.lng
+    ) {
+      console.log('here1')
+      setDistance(
+        calcNauticalMiles(
+          newMarker.position.lat,
+          newMarker.position.lng,
+          toMarker.position.lat,
+          toMarker.position.lng
+        )
+      )
+    } else {
+      setDistance(0)
+    }
   }
 
   const onToAutoCompleteChanged = (airport: IAirport) => {
@@ -97,6 +124,25 @@ function App() {
       }
     }
     setToMarker(newMarker)
+
+    if (
+      newMarker?.position.lat &&
+      newMarker?.position.lng &&
+      fromMarker?.position.lat &&
+      fromMarker?.position.lng
+    ) {
+      console.log('here2')
+      setDistance(
+        calcNauticalMiles(
+          newMarker.position.lat,
+          newMarker.position.lng,
+          fromMarker.position.lat,
+          fromMarker.position.lng
+        )
+      )
+    } else {
+      setDistance(0)
+    }
   }
 
   return (
@@ -117,6 +163,7 @@ function App() {
           <InfoOutlinedIcon sx={{ color: '#147BD1', fontSize: 16 }} />
           <HelperText>Search Term Must be at least 3 letters</HelperText>
         </HelperTextContainer>
+        <Distance>{`Distance: ${distance || 0} NMile`}</Distance>
       </SearchContainer>
       {isLoaded ? (
         <Map fromLocation={fromMarker} toLocation={toMarker} />

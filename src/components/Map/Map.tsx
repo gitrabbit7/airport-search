@@ -59,12 +59,6 @@ export const Map: FC<IMapProps> = memo(
       }
     }, [fromLocation, toLocation])
 
-    const handleActiveMarker = (id: number) => {
-      if (id !== activeMarker) {
-        setActiveMarker(id)
-      }
-    }
-
     const handleOnLoad = (mapIns: google.maps.Map) => {
       mapIns.setOptions({
         maxZoom: 8
@@ -86,11 +80,10 @@ export const Map: FC<IMapProps> = memo(
             icon={{
               url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
             }}
-            onClick={() => handleActiveMarker(fromLocation?.id)}
             animation={google.maps.Animation.BOUNCE}
           >
             {activeMarker === fromLocation?.id ? (
-              <InfoWindow onCloseClick={() => setActiveMarker(-1)}>
+              <InfoWindow>
                 <div>{fromLocation.name}</div>
               </InfoWindow>
             ) : null}
@@ -103,10 +96,9 @@ export const Map: FC<IMapProps> = memo(
               url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
             }}
             animation={google.maps.Animation.BOUNCE}
-            onClick={() => handleActiveMarker(toLocation?.id)}
           >
             {activeMarker === toLocation?.id && (
-              <InfoWindow onCloseClick={() => setActiveMarker(-1)}>
+              <InfoWindow>
                 <div>{toLocation?.name}</div>
               </InfoWindow>
             )}
