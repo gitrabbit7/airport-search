@@ -1,3 +1,4 @@
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { Box, styled, Typography } from '@mui/material'
 import { useLoadScript } from '@react-google-maps/api'
 import React, { useState } from 'react'
@@ -44,6 +45,28 @@ const SearchContainer = styled(Box)(({ theme }) => ({
   }
 }))
 
+const HelperTextContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  alignItems: 'center',
+  columnGap: theme.spacing(0.5),
+
+  [theme.breakpoints.down('sm')]: {
+    justifyContent: 'center'
+  }
+}))
+
+const HelperText = styled(Typography)(() => ({
+  color: '#147BD1',
+  fontSize: 12
+}))
+
+const SearchTerm = styled(Typography)(() => ({
+  fontSize: 14,
+  fontWeight: 600,
+  color: '#515759'
+}))
+
 function App() {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: REACT_APP_GOOGLE_MAP_API_KEY as string
@@ -79,9 +102,7 @@ function App() {
   return (
     <AppContainer>
       <SearchContainer>
-        <Typography sx={{ fontSize: 14, marginBottom: '4px' }}>
-          Search Airports with Name or IATA Code
-        </Typography>
+        <SearchTerm sx={{}}>Search Airports with Name or IATA Code</SearchTerm>
         <AutoComplete
           id='From_AutoComplete'
           label='From'
@@ -92,6 +113,10 @@ function App() {
           label='To'
           handleAutoCompleteChanged={onToAutoCompleteChanged}
         />
+        <HelperTextContainer>
+          <InfoOutlinedIcon sx={{ color: '#147BD1', fontSize: 16 }} />
+          <HelperText>Search Term Must be at least 3 letters</HelperText>
+        </HelperTextContainer>
       </SearchContainer>
       {isLoaded ? (
         <Map fromLocation={fromMarker} toLocation={toMarker} />

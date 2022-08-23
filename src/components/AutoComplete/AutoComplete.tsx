@@ -16,11 +16,11 @@ export interface IAutoCompleteProps {
   /**
    * Autocomplete Label
    */
-  label: string,
+  label: string
   /**
    * Function Fired when the FROM AutoComplete changed
    */
-  handleAutoCompleteChanged: (autoCompleteNameairport: IAirport) => void,
+  handleAutoCompleteChanged: (autoCompleteNameairport: IAirport) => void
 }
 
 const CustomAutoComplete = styled(MuiAutocomplete<IAirport>)(() => ({
@@ -32,15 +32,19 @@ const CustomAutoComplete = styled(MuiAutocomplete<IAirport>)(() => ({
 
 export const AutoComplete: FC<IAutoCompleteProps> = memo(
   ({ label = '', handleAutoCompleteChanged, ...props }: IAutoCompleteProps) => {
-    const { airports, singleAirport, handleInputChange, handleAutomCompleteChange } =
-      useGetAirports()
+    const {
+      term,
+      airports,
+      singleAirport,
+      handleInputChange,
+      handleAutomCompleteChange
+    } = useGetAirports()
     const [availableAirports, setAvailableAirports] = useState<IAirport[]>([])
 
     useEffect(() => {
       airports.forEach(function (airport) {
         airport.label = airport.name + ', ' + airport.iata
       })
-
       setAvailableAirports(airports)
     }, [airports])
 
@@ -50,6 +54,7 @@ export const AutoComplete: FC<IAutoCompleteProps> = memo(
 
     return (
       <CustomAutoComplete
+        loading={term.length > 2 ? true : false}
         {...props}
         disablePortal
         options={availableAirports ?? []}

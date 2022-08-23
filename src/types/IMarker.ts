@@ -1,4 +1,4 @@
-import { IPosition } from "./IPosition"
+import { IPosition } from './IPosition'
 
 export interface IMarker {
   id: number

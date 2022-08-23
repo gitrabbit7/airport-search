@@ -21,12 +21,14 @@ const InitialAirPortValue = {
     abbr: ''
   },
   latitude: '',
-  longitude : '',
+  longitude: ''
 }
 
 export const useGetAirports = () => {
+  const [term, setTerm] = useState('')
   const [airports, setAirports] = useState<IAirport[]>([])
-  const [singleAirport, setSingleAirport] = useState<IAirport>(InitialAirPortValue)
+  const [singleAirport, setSingleAirport] =
+    useState<IAirport>(InitialAirPortValue)
   const [timer, setTimer] = useState<NodeJS.Timeout>()
 
   const fetchAirports = useCallback(
@@ -54,6 +56,7 @@ export const useGetAirports = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     const keyword = e.target.value
+    setTerm(keyword)
     if (keyword?.length) {
       clearTimeout(timer)
       const newTimer = setTimeout(() => {
@@ -70,11 +73,13 @@ export const useGetAirports = () => {
     value: AutocompleteValue<IAirport, false, false, false>
   ) => {
     e.preventDefault()
+    if (!value) setAirports([])
     const iata = value?.iata as string
     fetchSingleAirport(iata)
   }
 
   return {
+    term,
     singleAirport,
     airports,
     handleInputChange,

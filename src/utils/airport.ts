@@ -24,4 +24,3 @@ export const getSingleAirPort = (iata: string) => {
     }
   })
 }
-

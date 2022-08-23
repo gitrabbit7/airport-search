@@ -31,7 +31,7 @@ export const Map: FC<IMapProps> = memo(
         bounds.extend(fromLocation?.position)
         map?.fitBounds(bounds)
       }
-        
+
       if (toLocation?.position.lat && toLocation?.position.lng) {
         bounds.extend(toLocation?.position)
         map?.fitBounds(bounds)
@@ -41,7 +41,7 @@ export const Map: FC<IMapProps> = memo(
     const handleActiveMarker = (id: number) => {
       if (id !== activeMarker) {
         setActiveMarker(id)
-      }      
+      }
     }
 
     const handleOnLoad = (mapIns: google.maps.Map) => {
