@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { AutocompleteValue } from '@mui/material'
+import { AxiosError } from 'axios'
 import { useCallback, useState } from 'react'
 
 import { IAirport } from '@/types'
@@ -37,15 +38,21 @@ export const useGetAirports = () => {
 
   const fetchAirports = useCallback(
     async (keyword: string) => {
-      const response = await getAirports(keyword)
-
-      if (response.data.status) {
-        setAirports((response.data?.airports as IAirport[]) ?? [])
-      } else {
+      try {
+        const response = await getAirports(keyword)
+        if (response.data.status) {
+          setAirports((response.data?.airports as IAirport[]) ?? [])
+        } else {
+          showToast({
+            message: response.data.message
+          })
+          setAirports([])
+        }
+      } catch (e) {
+        const error = e as AxiosError
         showToast({
-          message: response.data.message
+          message: error?.message
         })
-        setAirports([])
       }
     },
     [getAirports]
@@ -53,12 +60,19 @@ export const useGetAirports = () => {
 
   const fetchSingleAirport = useCallback(
     async (iata: string) => {
-      const response = await getSingleAirPort(iata)
-      setSingleAirport(
-        response.status
-          ? (response.data?.airport as IAirport) ?? InitialAirPortValue
-          : InitialAirPortValue
-      )
+      try {
+        const response = await getSingleAirPort(iata)
+        setSingleAirport(
+          response.status
+            ? (response.data?.airport as IAirport) ?? InitialAirPortValue
+            : InitialAirPortValue
+        )
+      } catch (e) {
+        const error = e as AxiosError
+        showToast({
+          message: error.message
+        })
+      }
     },
     [getSingleAirPort]
   )
