@@ -33,6 +33,7 @@ const CustomAutoComplete = styled(MuiAutocomplete<IAirport>)(() => ({
 export const AutoComplete: FC<IAutoCompleteProps> = memo(
   ({ label = '', handleAutoCompleteChanged, ...props }: IAutoCompleteProps) => {
     const {
+      isLoading,
       term,
       airports,
       singleAirport,
@@ -44,20 +45,18 @@ export const AutoComplete: FC<IAutoCompleteProps> = memo(
 
     useEffect(() => {
       if (term.length > 2) {
-        airports.forEach(function (airport) {
-          airport.label = airport.name + ', ' + airport.iata
-        })
-
-        const newAirports = airports.filter(
-          airport =>
-            airport.name.toLowerCase().includes(term.toLowerCase()) ||
-            airport.iata.toLowerCase().includes(term.toLowerCase())
-        )
-        if (!newAirports.length)
+        if (airports.length) {
+          airports.forEach(function (airport) {
+            airport.label = airport.name + ', ' + airport.iata
+          })
+          setAvailableAirports(airports)
+        } else {
           showToast({
+            type: 'warning',
             message: 'No results found for search term.'
           })
-        setAvailableAirports(newAirports)
+          setAvailableAirports([])
+        }
       } else {
         setAvailableAirports([])
       }
@@ -69,11 +68,14 @@ export const AutoComplete: FC<IAutoCompleteProps> = memo(
 
     return (
       <CustomAutoComplete
-        loading={term.length > 2}
+        loading={isLoading}
         {...props}
         disablePortal
         options={availableAirports}
         sx={{ width: 300 }}
+        filterOptions={option => {
+          return option
+        }}
         onChange={handleAutomCompleteChange}
         renderInput={params => (
           <TextField {...params} onChange={handleInputChange} label={label} />

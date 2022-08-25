@@ -29,6 +29,7 @@ const InitialAirPortValue = {
 
 export const useGetAirports = () => {
   const [term, setTerm] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const [airports, setAirports] = useState<IAirport[]>([])
   const [singleAirport, setSingleAirport] =
     useState<IAirport>(InitialAirPortValue)
@@ -39,7 +40,9 @@ export const useGetAirports = () => {
   const fetchAirports = useCallback(
     async (keyword: string) => {
       try {
+        setIsLoading(true)
         const response = await getAirports(keyword)
+        setIsLoading(false)
         if (response.data.status) {
           setAirports((response.data?.airports as IAirport[]) ?? [])
         } else {
@@ -110,6 +113,7 @@ export const useGetAirports = () => {
 
   return {
     term,
+    isLoading,
     singleAirport,
     airports,
     handleInputChange,

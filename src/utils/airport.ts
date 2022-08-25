@@ -4,7 +4,9 @@ import { API_URLS } from '@/configs/api'
 import { REACT_APP_APC_AUTH, REACT_APP_APC_AUTH_SECRET } from '@/configs/env'
 
 export const getAirports = (keyword: string) => {
-  const API_URL = `${API_URLS.AUTO_COMPLETE}?term=${keyword.substring(0, 20) ?? ''}`
+  const API_URL = `${API_URLS.AUTO_COMPLETE}?term=${
+    keyword.substring(0, 10).replace(/[']/g, ' ') ?? ''
+  }`
 
   return axios.post(API_URL, null, {
     headers: {
