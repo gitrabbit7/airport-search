@@ -1,14 +1,12 @@
-import { SnackbarProps } from '@mui/material'
 import Snackbar from '@mui/material/Snackbar'
 import { FC, memo } from 'react'
 
 import { Alert } from '@/components'
 import { useToast } from '@/hooks'
+import { IToastState } from '@/types'
 
-export interface IToastProps extends SnackbarProps {}
-
-export const Toast: FC<IToastProps> = memo(
-  ({ open, message, ...props }: IToastProps) => {
+export const Toast: FC<IToastState> = memo(
+  ({ open, message, type, ...props }: IToastState) => {
     const { hideToast } = useToast()
 
     return (
@@ -18,7 +16,7 @@ export const Toast: FC<IToastProps> = memo(
         onClose={() => hideToast()}
         {...props}
       >
-        <Alert severity='warning'>{message}</Alert>
+        <Alert severity={type}>{message}</Alert>
       </Snackbar>
     )
   }

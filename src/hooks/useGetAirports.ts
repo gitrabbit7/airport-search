@@ -44,6 +44,7 @@ export const useGetAirports = () => {
           setAirports((response.data?.airports as IAirport[]) ?? [])
         } else {
           showToast({
+            type: 'warning',
             message: response.data.message
           })
           setAirports([])
@@ -51,6 +52,7 @@ export const useGetAirports = () => {
       } catch (e) {
         const error = e as AxiosError
         showToast({
+          type: 'error',
           message: error?.message
         })
       }
@@ -70,6 +72,7 @@ export const useGetAirports = () => {
       } catch (e) {
         const error = e as AxiosError
         showToast({
+          type: 'error',
           message: error.message
         })
       }

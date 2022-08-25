@@ -1,5 +1,6 @@
-import { SnackbarProps as IToastState } from '@mui/material'
 import { Dispatch } from 'react'
+
+import { IToastState } from '@/types'
 
 export type TToastReducerType = 'SHOW_TOAST' | 'HIDE_TOAST'
 
@@ -11,6 +12,7 @@ export interface IToastAction {
 export const initialToastState: IToastState = {
   open: false,
   message: '',
+  type: 'warning',
   anchorOrigin: { vertical: 'top', horizontal: 'center' }
 }
 
@@ -22,6 +24,7 @@ export const toastReducer = (
     case 'SHOW_TOAST':
       return {
         ...action.payload,
+        type: action.payload?.type || 'warning',
         open: true
       }
     case 'HIDE_TOAST':

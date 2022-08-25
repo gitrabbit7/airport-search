@@ -1,8 +1,8 @@
-import { SnackbarProps as IToastState } from '@mui/material'
 import type { PropsWithChildren } from 'react'
 import { createContext, Reducer, useReducer } from 'react'
 
 import { Toast } from '@/components'
+import { IToastState } from '@/types'
 
 import {
   hideToast,
@@ -26,7 +26,9 @@ const createToastContext = (
     state: IToastState
     actions: { [key: string]: CallableFunction }
   }>({
-    state: {},
+    state: {
+      type: 'warning'
+    },
     actions: {}
   })
 
